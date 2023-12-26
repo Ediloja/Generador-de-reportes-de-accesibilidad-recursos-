@@ -1,0 +1,185 @@
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Light'), local('Lato-Light')
+    url('Font-Family/Lato-Light.ttf');
+}
+* { font-family: sans-serif;}
+/* * { font-family: sans-serif; color: rgb(41, 99, 125);}*/
+p { font-family: sans-serif; }
+
+@page {
+    @top-center{
+        content: url('EdiLojaHeader.png');
+        transform: scale(.3);
+        /*transform-origin: 100% 50%;
+        position: absolute;*/
+    }
+
+    background-image: url('image.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 800px;
+}
+
+html {
+    /*background: url('image.png'); rgb(87, 88, 90)
+    margin: 50px;*/
+    margin: 0;
+    padding: 0;
+}
+
+.title { font-size: 1.5em; font-weight: 400; }
+.course-name { font-size: 1.3em; font-weight: 400; text-transform: capitalize !important; }
+.text-cap { text-transform: lowercase; }
+.text-cap::first-line { text-transform: capitalize; }
+p { line-height: 1.5; }
+.equation_image {
+    max-width: 100%;
+    height: auto;
+}
+.box-results { 
+    background-color: rgba(247, 247, 247, 0.5);
+}
+
+.span_th {
+    color:red !important;
+}
+img {
+    max-width: 10%
+}
+
+hr {
+    border: 0;
+    height: 0.2px; 
+    background-color: rgb(87, 88, 90);
+}
+
+a {
+    text-decoration: none;
+}
+
+.info_general {
+    margin: 35px 0;
+}
+
+.res_table {
+    padding: 10px 35px;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.res_table th, .res_table td, .res_table p {
+    color: rgb(87, 88, 90);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.detail_h3 {
+    margin-top: 15px;
+}
+
+.div_table thead {
+    display: table-row-group !important;
+}
+
+.div_table table {
+    page-break-before: always;
+}
+
+.div_table table td{
+    text-align: start;
+}
+
+.res_table table table {
+    border-collapse: collapse!important;
+    width: 30%!important;
+    font-size: 9px!important;
+}
+
+.res_table table table td, .res_table table table th{
+    line-height: 1.2!important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+table.tabla-general {
+    border-collapse: collapse;
+    width: 30%;
+    margin: 10px;
+    font-size: 9px;
+}
+
+table.tabla-general tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.tabla-general-horizontal th {
+    color: #000000;
+    border-bottom: 0.06em solid #000000;
+}
+
+table.tabla-general th {
+    background-color: #004170;
+    color: #ffffff;
+    border: 1px solid #e9eae8;
+    text-align: center;
+    font-size: 9px;
+}
+
+table.tabla-general th strong,
+.tabla-general-horizontal th strong
+{
+    color: #ffffff;
+}
+
+table.tabla-general tr:nth-child(even) {
+    background-color: #e9eae8;
+}
+
+table.tabla-general td {
+    text-align: center;
+    border: 1px solid #004170;
+    font-size: 9px;
+}
+
+th, td {
+    padding: 18px;
+    border-bottom: 1px solid #ddd;
+}
+th:last-of-type, td:last-of-type {
+    text-align: right;
+}
+th:first-of-type, td:first-of-type {
+    text-align: left;
+}
+
+.tbl_resume_criteria td{
+    text-align: right;
+}
+
+.th_red {
+    color:red !important;
+}
+
+.th_green {
+    color:rgb(51, 102, 0) !important;
+}
+
+.div_week {
+    background-color: #e8e8ea;
+    padding: 0.1px 0;
+}
+
+.txt_left {
+    text-align: end;
+}
+
+.qr_code {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
