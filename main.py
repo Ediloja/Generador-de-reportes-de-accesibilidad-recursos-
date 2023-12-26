@@ -91,27 +91,11 @@ async def read_excel_file():
 
             summary_val = await get_summary(info_summary, row[2])
             status = True
-
-            #if summary_criteria == None:
-               # summary_criteria = await set_data_criteria()
-            #else:
-            #    summary_criteria
-
-            #course_name = row[3]
-            #author_name = row[5]
-            #for index in range(1, 13):
-            #    summary_criteria[f'c{index}'] = row[80+index]
         else: 
             status = False
             criteria_summary = await set_value(row, summary_criteria)
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
 
-
-    #change = info.iloc[:, 2].ne(info.iloc[:, 2].shift())
-    
-    #algo = info.iloc[:, 2]
-    #for value in info:
-    #    print(value)
 
     fin_pandas = time.time()
     tiempo_total_pandas = fin_pandas - inicio_pandas
