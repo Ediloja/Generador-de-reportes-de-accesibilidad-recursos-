@@ -14,12 +14,12 @@ async def get_summary(info_summary, comp_code):
     unique_values = set()
 
     for index, row in info_summary.iterrows():
-        if comp_code == row[2]:
-            summary_values["resources_nm"] = row[3]
-            summary_values["cumply"] = row[4]
-            summary_values["not_cumply"] = row[5]
-            summary_values["no_apply"] = row[6]
-            summary_values["partially_complies"] = row[7]
+        if comp_code == row.iloc[2]:
+            summary_values["resources_nm"] = row.iloc[3]
+            summary_values["cumply"] = row.iloc[4]
+            summary_values["not_cumply"] = row.iloc[5]
+            summary_values["no_apply"] = row.iloc[6]
+            summary_values["partially_complies"] = row.iloc[7]
             
             return summary_values
     
@@ -27,10 +27,10 @@ async def get_summary(info_summary, comp_code):
 
 
 async def set_value(row, summary_criteria):
-    summary_criteria['rs_name'] = row[75]
-    summary_criteria['url'] = row[79]
+    summary_criteria['rs_name'] = row.iloc[75]
+    summary_criteria['url'] = row.iloc[79]
     for index in range(1, 13):
-        summary_criteria[f'c{index}'] = row[80+index]
+        summary_criteria[f'c{index}'] = row.iloc[80+index]
     
     return summary_criteria
 
@@ -69,10 +69,10 @@ async def read_excel_file():
 
     for index, row in info.iterrows():
         
-        if row[2] not in unique_values:
+        if row.iloc[2] not in unique_values:
             summary_criteria = await set_data_criteria()
 
-            unique_values.add(row[2])
+            unique_values.add(row.iloc[2])
 
             if status == False:
                 filename = "Reporte de accesibilidad de Recursos Educativos_" + banner_code + ".pdf"
@@ -81,15 +81,15 @@ async def read_excel_file():
                 await write_report(filename, fileFin)
                 
 
-            banner_code = row[2]
-            course_name = row[3]
-            author_name = row[5]
+            banner_code = row.iloc[2]
+            course_name = row.iloc[3]
+            author_name = row.iloc[5]
 
             criteria_summary = await set_value(row, summary_criteria)
-
+            summcrit_table = ""
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
 
-            summary_val = await get_summary(info_summary, row[2])
+            summary_val = await get_summary(info_summary, row.iloc[2])
             status = True
         else: 
             status = False
