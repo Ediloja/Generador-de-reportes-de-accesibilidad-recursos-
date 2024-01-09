@@ -86,8 +86,12 @@ table {
     display: table-row-group !important;
 }
 
-.div_table table {
+.container-table {
     page-break-before: always;
+}
+
+.div_table table {
+    page-break-after: always;
 }
 
 .div_table table td{

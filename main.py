@@ -77,7 +77,7 @@ async def read_excel_file():
             if status == False:
                 filename = "Reporte de accesibilidad de Recursos Educativos_" + banner_code + ".pdf"
                 info_main = await writePDF.write_main_info(course_name, author_name, summary_val)
-                fileFin = info_main + """<h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table + writePDF.footer()
+                fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
                 await write_report(filename, fileFin)
                 
 
