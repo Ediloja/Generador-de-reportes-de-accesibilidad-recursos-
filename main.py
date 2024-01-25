@@ -3,6 +3,7 @@ import pandas as pd
 import dask.dataframe as dd
 import time
 import writePDF
+from writeOnFolders import writeFolder, checkIfFolderExist
 from weasyprint import HTML, CSS
 
 async def get_summary(info_summary, comp_code):
@@ -44,11 +45,13 @@ async def set_data_criteria():
     return summary_criteria
 
 
-async def write_report(filename, fileFin):
+async def write_report(path, filename, fileFin):
+    pat = f"{path}/{filename}"
+    print(pat)
     html_string = HTML(string=fileFin, base_url='./')
     css = CSS('files/styles.css')
     html_string.write_pdf(
-    filename, stylesheets=[css])
+    pat, stylesheets=[css])
 
 
 async def read_excel_file():
@@ -63,25 +66,28 @@ async def read_excel_file():
 
     info = pd.read_excel(excel_file, sheet_name=sheet_1)
     info_summary = pd.read_excel(excel_file, sheet_name=sheet_2)
-    info = info.iloc[2:, :]
+    columna = info["Etiquetado de archivos"]
+    state_GDV_colum = info["Estado GDV"]
+    facultad_colum = info["Facultad"]
+    info = info.iloc[1:, :]
 
     unique_values = set()
 
     for index, row in info.iterrows():
-        
-        if row.iloc[2] not in unique_values:
+        #await writeFolder(state_GDV[index])
+        if (row.iloc[2] not in unique_values):
             summary_criteria = await set_data_criteria()
 
             unique_values.add(row.iloc[2])
 
-            if status == False:
-                filename = "Reporte de accesibilidad de Recursos Educativos_" + banner_code + ".pdf"
+            if (status == False):
+                filename = banner_code + ".pdf"
                 info_main = await writePDF.write_main_info(course_name, author_name, summary_val)
                 fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
-                await write_report(filename, fileFin)
+                await write_report(path, filename, fileFin)
                 
 
-            banner_code = row.iloc[2]
+            banner_code = columna[index]
             course_name = row.iloc[3]
             author_name = row.iloc[5]
 
@@ -90,11 +96,17 @@ async def read_excel_file():
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
 
             summary_val = await get_summary(info_summary, row.iloc[2])
-            status = True
+            path = await checkIfFolderExist(state_GDV_colum[index], facultad_colum[index])
         else: 
             status = False
             criteria_summary = await set_value(row, summary_criteria)
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
+    
+
+    filename = banner_code + ".pdf"
+    info_main = await writePDF.write_main_info(course_name, author_name, summary_val)
+    fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
+    await write_report(path, filename, fileFin)
 
 
     fin_pandas = time.time()
