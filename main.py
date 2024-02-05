@@ -12,24 +12,35 @@ async def get_summary(info_summary, comp_code):
                         "no_apply": 0, "not_cumply": 0}
     info_summary = info_summary.iloc[0:, :]
 
+    ###
+    tag_column = info_summary["Etiquetado de archivos"]
+    trs_column = info_summary["Total recursos"]
+    cum_column = info_summary["Cumple"]
+    noc_column = info_summary["No cumple"]
+    nap_column = info_summary["No aplica"]
+    cmp_column = info_summary["Cumple parcialmente"]
+
     unique_values = set()
 
     for index, row in info_summary.iterrows():
-        if comp_code == row.iloc[2]:
-            summary_values["resources_nm"] = row.iloc[3]
-            summary_values["cumply"] = row.iloc[4]
-            summary_values["not_cumply"] = row.iloc[5]
-            summary_values["no_apply"] = row.iloc[6]
-            summary_values["partially_complies"] = row.iloc[7]
+        if comp_code == tag_column[index]:
+            summary_values["resources_nm"] = trs_column[index]
+            summary_values["cumply"] = cum_column[index]
+            summary_values["not_cumply"] = noc_column[index]
+            summary_values["no_apply"] = nap_column[index]
+            summary_values["partially_complies"] = cmp_column[index]
             
             return summary_values
     
     return summary_values
 
 
-async def set_value(row, summary_criteria):
-    summary_criteria['rs_name'] = row.iloc[75]
-    summary_criteria['url'] = row.iloc[79]
+async def set_value(info, row, index, summary_criteria):
+    resourcname_column = info["Nombre de recurso"]
+    resourceURL_column = info["URL de recurso"]
+
+    summary_criteria['rs_name'] = resourcname_column[index]
+    summary_criteria['url'] = resourceURL_column[index]
     for index in range(1, 13):
         summary_criteria[f'c{index}'] = row.iloc[80+index]
     
@@ -66,19 +77,24 @@ async def read_excel_file():
 
     info = pd.read_excel(excel_file, sheet_name=sheet_1)
     info_summary = pd.read_excel(excel_file, sheet_name=sheet_2)
-    columna = info["Etiquetado de archivos"]
+
+    ###
+    tag_column = info["Etiquetado de archivos"]
+    nam_column = info["Nombre de Asignatura"]
+    aut_column = info["Autor GDV"]
+
     state_GDV_colum = info["Estado GDV"]
     facultad_colum = info["Facultad"]
-    info = info.iloc[1:, :]
+    info = info.iloc[0:, :]
 
     unique_values = set()
 
     for index, row in info.iterrows():
         #await writeFolder(state_GDV[index])
-        if (row.iloc[2] not in unique_values):
+        if (tag_column[index] not in unique_values):
             summary_criteria = await set_data_criteria()
 
-            unique_values.add(row.iloc[2])
+            unique_values.add(tag_column[index])
 
             if (status == False):
                 filename = banner_code + ".pdf"
@@ -86,20 +102,19 @@ async def read_excel_file():
                 fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
                 await write_report(path, filename, fileFin)
                 
+            banner_code = tag_column[index]
+            course_name = nam_column[index]
+            author_name = aut_column[index]
 
-            banner_code = columna[index]
-            course_name = row.iloc[3]
-            author_name = row.iloc[5]
-
-            criteria_summary = await set_value(row, summary_criteria)
+            criteria_summary = await set_value(info, row, index, summary_criteria)
             summcrit_table = ""
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
 
-            summary_val = await get_summary(info_summary, row.iloc[2])
+            summary_val = await get_summary(info_summary, tag_column[index])
             path = await checkIfFolderExist(state_GDV_colum[index], facultad_colum[index])
         else: 
             status = False
-            criteria_summary = await set_value(row, summary_criteria)
+            criteria_summary = await set_value(info, row, index, summary_criteria)
             summcrit_table = summcrit_table + await writePDF.summary_table(criteria_summary)
     
 
