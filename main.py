@@ -7,6 +7,17 @@ from writeOnFolders import writeFolder, checkIfFolderExist
 from weasyprint import HTML, CSS
 
 async def get_summary(info_summary, comp_code):
+    """
+    Establece el resumen de un archivo. Valores como: Total de recursos,
+        Cumple, No cumple, No aplica, Cumple parcialmente.
+
+    :param info_summary: DataFrame con información de la hoja "Portadas"
+    :type info_summary: Dataframe
+    :param comp_code: Código de archivo, ejm 
+    :type comp_code: str
+    :return: Diccionario que contiene el resumen de un archivo de accesibilidad
+    :rtype: dict
+    """
     summary_values = {"resources_nm": 0, "cumply": 0,
                         "partially_complies": 0, 
                         "no_apply": 0, "not_cumply": 0}
@@ -36,6 +47,16 @@ async def get_summary(info_summary, comp_code):
 
 
 async def set_value(info, row, index, summary_criteria):
+    """
+    Establece los valores de estado de cada criterio. Por ejemplo: Criterio-1 Cumple, Criterio2 No aplica, etc.
+
+    :param info: DataFrame con información de la hoja "Enlistado"
+    :type info: Dataframe
+    :param row: Fila de un Dataframe
+    :type row: obj
+    :return: Diccionario con información de un recurso y su detalle sobre cada criterio
+    :rtype: dict
+    """
     resourcname_column = info["Nombre de recurso"]
     resourceURL_column = info["URL de recurso"]
 
@@ -48,6 +69,13 @@ async def set_value(info, row, index, summary_criteria):
 
 
 async def set_data_criteria():
+    """
+    Asigna el formato de para guardar las respuestas de excel y 
+    devuelve como un diccionario.
+    
+    :return: Diccionario que contiene la estructura de como se almacena los criterios
+    :rtype: dict
+    """
     summary_criteria = {"rs_name": "", "url": "",
                         "c1": "", "c2": "", "c3": "",
                         "c4": "", "c5": "", "c6": "",
@@ -57,6 +85,17 @@ async def set_data_criteria():
 
 
 async def write_report(path, filename, fileFin):
+    """
+    Escribe el documento PDF con la información de accesibilidad de recursos
+    
+    :param path: Ruta de carpetas donde se guardará el archivo
+    :type path: str
+    :param filename: Nombre del archivo de reporte de accesibilidad
+    :type filename: str
+    :param fileFin: Contenido del reporte de accesibilidad
+    :type fileFin: str
+    """
+
     pat = f"{path}/{filename}"
     print(pat)
     html_string = HTML(string=fileFin, base_url='./')
@@ -66,6 +105,11 @@ async def write_report(path, filename, fileFin):
 
 
 async def read_excel_file():
+    """
+    Contiene el proceso para buscar y asignar la información de un excel y apartir de ahí crear 
+    el formato final que se escribirá en el reporte de accesibilidad (documento PDF)
+    """
+
     excel_file = "Enlistado de recursos COMPLETO.xlsx"
     sheet_1 = "Enlistado"
     sheet_2 = "Portadas"

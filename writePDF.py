@@ -3,10 +3,29 @@ from datetime import datetime
 
 class PDF():
     def setHeader(self):
+        """
+        :return: Título del reporte de accesibilidad
+        :rtype: str
+        """
+
         header = '<br /><br /><p class="title">Reporte de accesibilidad recursos educativos digitales</strong></p>'
         return header 
     
     def set_mainInfo(self, course_name, teacher, summary_text):
+        """
+        Establece en código HTML el encabezado de un reporte de accesibilidad, esto incluye información
+        general de curso (Nombre de la institución, nombre de la asignatura, Nombre del profesor, etc.)
+
+        :param course_name: Nombre del curso
+        :type course_name: str
+        :param teacher: Nombre del profesor
+        :type teacher: str
+        :param summary_text: Texto de resumen
+        :type summary_text: str
+        :return: Información del encabezado de un reporte de accesibilidad
+        :rtype: str
+        """
+
         main_information = '''<div class="info_general"><p style="line-height: 1.5;"><strong>Nombre de la institución: </strong>Universidad Técnica Particular de Loja </br>
         <strong>Nombre de la asignatura: </strong>''' + str(course_name) + '''</br>
         <strong>Nombre del profesor responsable del metacurso: </strong>''' + str(teacher).title() + '''</br>
@@ -20,6 +39,17 @@ class PDF():
     
 
     def set_resume(self, resource_sum):
+        """
+        Información parte del encabezado de un reporte de accesibilidad. Contiene el resumen en números
+        de los recursos. Numero de recursos que cumplen, número de recursos que cumplen parcialmente, etc.
+
+        :param resource_sum: sección que contiene información sobre el resumen de un reporte de accesibilidad de recursos
+        :type resource_sum: str
+        
+        :return: Resumen de recursos de accesibilidad
+        :rtype: str
+        """
+
         main_information = f'''<div class="info_general"><p style="line-height: 1.5;">Número de recursos: {resource_sum["resources_nm"]} </br>
         Cumple (C): {resource_sum["cumply"]}</br>
         Cumple parcialmente (CP): {resource_sum["partially_complies"]}</br>
@@ -28,7 +58,19 @@ class PDF():
 
         return main_information
     
+    
     def details_of_resources(self, summary_criteria):
+        """
+        Establece la estructura de tabla en HTML sobre un recurso y el estado de cumplimiento de sus criterios
+        (cumple, no aplica, cumple parcialmente, no cumple)
+
+        :param summary_criteria: Diccionario con información de cada recurso
+        :type summary_criteria: dic
+        
+        :return: Tabla con información de un recurso
+        :rtype: str
+        """
+
         summ_table = f'''<div class="div_table"><table>
             <caption><strong>Nombre de recurso:</strong> {summary_criteria["rs_name"]}</br>
                         <strong>URL:</strong> <a href="{summary_criteria["url"]}">{summary_criteria["url"]}</a></caption>
@@ -164,6 +206,11 @@ class PDF():
 
 
 def get_summText():
+    """
+    :return: Texto del resumen de un reporte de accesibilidad
+    :rtype: str
+    """
+
     return """Los criterios de accesibilidad considerados en este informe tienen 
             como base los estándares de calidad para recursos educativos digitales 
             señalados en la Norma UNE 71362:2020 y de los criterios de conformidad 
@@ -171,6 +218,19 @@ def get_summText():
         
 
 async def write_main_info(course_name, teacher, resource_sum):
+    """
+    Establece el encabezado del reporte de accesibilidad
+
+    :param course_name: Nombre del curso
+    :type course_name: str
+    :param teacher: Nombre del profesor
+    :type teacher: str
+    :param resource_sum: Diccionario que contiene el resumen de un archivo de accesibilidad
+    :type resource_sum: dict
+    :return: Información de encabezado dell reporte de accesibilidad
+    :rtype: str
+    """
+
     pdf = PDF()
     title_info = pdf.setHeader()
     summary_text = get_summText()
@@ -182,9 +242,23 @@ async def write_main_info(course_name, teacher, resource_sum):
 
 
 async def summary_table(criteria_summary):
+    """
+    Establece el detalle de cada recurso y el estado sobre cada criterio
+
+    :param criteria_summary: Diccionario con información de cada recurso
+    :type criteria_summary: dic
+    :return: Tabla de cada recurso
+    :rtype: str
+    """
+
     pdf = PDF()
     summary = pdf.details_of_resources(criteria_summary)
     return summary
 
+
 def footer():
+    """
+    :return: Imagen QR
+    :rtype: str
+    """
     return """<img class="qr_code" src="files/qr-code_Ediloja.png"/>"""
