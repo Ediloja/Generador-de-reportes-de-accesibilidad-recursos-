@@ -11,7 +11,7 @@ class PDF():
         header = '<br /><br /><p class="title">Reporte de accesibilidad recursos educativos digitales</strong></p>'
         return header 
     
-    def set_mainInfo(self, course_name, teacher, summary_text):
+    def set_mainInfo(self, course_name, program_name, teacher, summary_text):
         """
         Establece en código HTML el encabezado de un reporte de accesibilidad, esto incluye información
         general de curso (Nombre de la institución, nombre de la asignatura, Nombre del profesor, etc.)
@@ -27,11 +27,12 @@ class PDF():
         """
 
         main_information = '''<div class="info_general"><p style="line-height: 1.5;"><strong>Nombre de la institución: </strong>Universidad Técnica Particular de Loja </br>
-        <strong>Nombre de la asignatura: </strong>''' + str(course_name) + '''</br>
-        <strong>Nombre del profesor responsable del metacurso: </strong>''' + str(teacher).title() + '''</br>
-        <strong>Periodo académico: </strong> octubre 2023-febrero 2024 </br>
+        <strong>Nombre de módulo: </strong>''' + str(course_name) + '''</br>
+        <strong>Nombre de programa: </strong>''' + str(program_name) + '''</br>
+        <strong>Nombre de autor: </strong>''' + str(teacher).title() + '''</br>
+        <strong>Periodo académico: </strong> octubre 2024-febrero 2025 </br>
         <strong>Generado por: </strong> Ediloja Cía. Ltda. </br>
-        <strong>Fecha de emisión del reporte: </strong>20-09-2023</p></div>
+        <strong>Fecha de emisión del reporte: </strong>13 de octubre del 2024</p></div>
         <h3>Resumen general de cumplimiento</h3>
         <p class="summ_text">''' + str(summary_text) + '''</p>'''
 
@@ -50,11 +51,11 @@ class PDF():
         :rtype: str
         """
 
-        main_information = f'''<div class="info_general"><p style="line-height: 1.5;">Número de recursos: {resource_sum["resources_nm"]} </br>
-        Cumple (C): {resource_sum["cumply"]}</br>
-        Cumple parcialmente (CP): {resource_sum["partially_complies"]}</br>
-        No aplica (NA): {resource_sum["no_apply"]}</br>
-        No cumple (NC): {resource_sum["not_cumply"]} </p></div>'''
+        main_information = f'''<div class="info_general"><p style="line-height: 1.5;"><strong>Número de recursos:</strong> {resource_sum["resources_nm"]} </br>
+        <strong>Cumple (C):</strong> {resource_sum["cumply"]}</br>
+        <strong>Cumple parcialmente (CP):</strong> {resource_sum["partially_complies"]}</br>
+        <strong>No aplica (NA):</strong> {resource_sum["no_apply"]}</br>
+        <strong>No cumple (NC):</strong> {resource_sum["not_cumply"]} </p></div>'''
 
         return main_information
     
@@ -71,7 +72,7 @@ class PDF():
         :rtype: str
         """
 
-        summ_table = f'''<div class="div_table"><table>
+        summ_table = f'''<div class="div_table"><table class="criteria_table">
             <caption><strong>Nombre de recurso:</strong> {summary_criteria["rs_name"]}</br>
                         <strong>URL:</strong> <a href="{summary_criteria["url"]}">{summary_criteria["url"]}</a></caption>
             <thead>
@@ -200,7 +201,7 @@ class PDF():
                     <td>{summary_criteria["c12"]}</td>
                 </tr>
             </tbody>
-            </table><div/>'''
+            </table></div>'''
 
         return summ_table
 
@@ -217,7 +218,7 @@ def get_summText():
             de las pautas de accesibilidad al contenido web (WCAG 2.1)."""    
         
 
-async def write_main_info(course_name, teacher, resource_sum):
+async def write_main_info(course_name, program_name, teacher, resource_sum):
     """
     Establece el encabezado del reporte de accesibilidad
 
@@ -234,7 +235,7 @@ async def write_main_info(course_name, teacher, resource_sum):
     pdf = PDF()
     title_info = pdf.setHeader()
     summary_text = get_summText()
-    header = pdf.set_mainInfo(course_name, teacher, summary_text)
+    header = pdf.set_mainInfo(course_name, program_name, teacher, summary_text)
 
     resume = pdf.set_resume(resource_sum)
 

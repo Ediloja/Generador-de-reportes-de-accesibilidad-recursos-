@@ -24,7 +24,7 @@ async def get_summary(info_summary, comp_code):
     info_summary = info_summary.iloc[0:, :]
 
     ###
-    tag_column = info_summary["Etiquetado de archivos"]
+    tag_column = info_summary["Código Canvas"]
     trs_column = info_summary["Total recursos"]
     cum_column = info_summary["Cumple"]
     noc_column = info_summary["No cumple"]
@@ -62,8 +62,9 @@ async def set_value(info, row, index, summary_criteria):
 
     summary_criteria['rs_name'] = resourcname_column[index]
     summary_criteria['url'] = resourceURL_column[index]
+    #print(row.keys())
     for index in range(1, 13):
-        summary_criteria[f'c{index}'] = row.iloc[80+index]
+        summary_criteria[f'c{index}'] = row[f'C{index}']
     
     return summary_criteria
 
@@ -110,9 +111,9 @@ async def read_excel_file():
     el formato final que se escribirá en el reporte de accesibilidad (documento PDF)
     """
 
-    excel_file = "Enlistado de recursos COMPLETO.xlsx"
-    sheet_1 = "Enlistado"
-    sheet_2 = "Portadas"
+    excel_file = "Enlistado Recursos RED 2024-2 Posgrado.xlsx"
+    sheet_1 = "Posgrado"
+    sheet_2 = "Portadas posgrado"
 
     summcrit_table = ""
     status = True
@@ -123,11 +124,12 @@ async def read_excel_file():
     info_summary = pd.read_excel(excel_file, sheet_name=sheet_2)
 
     ###
-    tag_column = info["Etiquetado de archivos"]
-    nam_column = info["Nombre de Asignatura"]
-    aut_column = info["Autor GDV"]
+    tag_column = info["Código Canvas"]
+    nam_column = info["Módulo (malla curricular)"]
+    prg_column = info["Nombre del Programa"]
+    aut_column = info["Apellidos y nombres del Docente"]
 
-    state_GDV_colum = info["Estado GDV"]
+    state_GDV_colum = info["Metacurso (indicar si será nuevo o reutilizable)"]
     facultad_colum = info["Facultad"]
     info = info.iloc[0:, :]
 
@@ -142,12 +144,13 @@ async def read_excel_file():
 
             if (status == False):
                 filename = banner_code + ".pdf"
-                info_main = await writePDF.write_main_info(course_name, author_name, summary_val)
+                info_main = await writePDF.write_main_info(course_name, progrm_name, author_name, summary_val)
                 fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
                 await write_report(path, filename, fileFin)
                 
             banner_code = tag_column[index]
             course_name = nam_column[index]
+            progrm_name = prg_column[index]
             author_name = aut_column[index]
 
             criteria_summary = await set_value(info, row, index, summary_criteria)
@@ -163,7 +166,7 @@ async def read_excel_file():
     
 
     filename = banner_code + ".pdf"
-    info_main = await writePDF.write_main_info(course_name, author_name, summary_val)
+    info_main = await writePDF.write_main_info(course_name, progrm_name, author_name, summary_val)
     fileFin = info_main + """<div class="container-table"> <h3 class="detail_h3">Detalle de recursos</h3>""" + summcrit_table +"""</div>""" + writePDF.footer()
     await write_report(path, filename, fileFin)
 
