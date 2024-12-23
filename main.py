@@ -5,6 +5,7 @@ import time
 import writePDF
 from writeOnFolders import writeFolder, checkIfFolderExist
 from weasyprint import HTML, CSS
+import gc
 
 async def get_summary(info_summary, comp_code):
     """
@@ -130,7 +131,8 @@ async def read_excel_file():
     aut_column = info["Apellidos y nombres del Docente"]
 
     state_GDV_colum = info["Metacurso (indicar si será nuevo o reutilizable)"]
-    facultad_colum = info["Facultad"]
+    #facultad_colum = info["Facultad"]
+    facultad_colum = info["Nombre del Programa"]
     info = info.iloc[0:, :]
 
     unique_values = set()
